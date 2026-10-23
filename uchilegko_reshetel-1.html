@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#101827">
+<title>УчиЛегко — Решатель примеров</title>
+<style>
+[hidden]{display:none!important}
+.tabs{display:flex;gap:8px;margin-bottom:14px;padding:5px;background:#172235;border:1px solid #30415d;border-radius:16px}
+.tab{flex:1;background:transparent;color:#a7b4cb;padding:12px 10px}
+.tab.active{background:#8b7cff;color:white}
+.learn-panel h2{margin:0;font-size:23px}
+.lesson-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:18px}
+.lesson{display:flex;align-items:center;gap:11px;text-align:left;background:#202e45;border:1px solid #354663;color:#f3f6ff;padding:14px;border-radius:15px;min-width:0}
+.lesson-icon{display:grid;place-items:center;flex:0 0 40px;height:40px;border-radius:12px;background:#8b7cff22;color:#b8adff;font-size:21px;font-weight:800}
+.lesson strong,.lesson small{display:block}
+.lesson strong{font-size:14px}
+.lesson small{font-size:12px;color:#a7b4cb;margin-top:3px}
+.chevron{margin-left:auto;font-size:25px;color:#a7b4cb}
+.lesson-detail{margin-top:16px;padding:18px;background:#0e1726;border:1px solid #415170;border-radius:16px}
+.detail-heading{display:flex;gap:10px;align-items:center}
+.detail-heading span{font-size:25px}
+.detail-heading h3{font-size:20px;margin:0}
+.lesson-detail p{color:#dbe4f5;margin:12px 0}
+.lesson-detail ol{padding-left:22px;color:#dbe4f5}
+.lesson-detail li{margin:8px 0}
+.example-box{background:#202e45;border-radius:12px;padding:12px;margin:12px 0;font-size:18px}
+.secondary-button{background:#202e45;border:1px solid #415170;margin-top:8px}
+@media(max-width:560px){.lesson-list{grid-template-columns:1fr}.lesson{padding:12px}}
+:root{color-scheme:dark;--bg:#101827;--panel:#172235;--panel2:#202e45;--text:#f3f6ff;--muted:#a7b4cb;--line:#30415d;--accent:#8b7cff;--accent2:#61dfc1;--bad:#ff9eae}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at top left,#26345a 0,transparent 42%),var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;min-height:100vh}
+main{width:min(900px,100%);margin:auto;padding:28px 18px 44px}
+header{display:flex;align-items:center;gap:12px;margin:8px 0 28px}
+.logo{width:48px;height:48px;border-radius:15px;background:linear-gradient(135deg,var(--accent),#55c9e8);display:grid;place-items:center;font-size:25px;font-weight:800;color:white;box-shadow:0 8px 28px #0003}
+h1{font-size:clamp(25px,5vw,36px);line-height:1.1;margin:0;letter-spacing:-.7px}
+.sub{color:var(--muted);margin:6px 0 0}
+.card{background:#172235ed;border:1px solid var(--line);border-radius:22px;padding:clamp(17px,4vw,28px);box-shadow:0 18px 55px #0002}
+label{display:block;color:var(--muted);font-size:14px;margin:0 0 9px}
+.entry{display:flex;gap:10px;align-items:stretch}
+input{min-width:0;flex:1;background:#0e1726;border:1px solid #415170;color:var(--text);border-radius:14px;padding:16px;font:inherit;font-size:20px;outline:none}
+input:focus{border-color:var(--accent);box-shadow:0 0 0 3px #8b7cff33}
+button{border:0;border-radius:14px;padding:13px 18px;background:var(--accent);color:white;font:inherit;font-weight:700;cursor:pointer}
+button:active{transform:translateY(1px)}
+.clear{background:var(--panel2);border:1px solid var(--line);padding:0 14px}
+.hint{font-size:13px;color:var(--muted);margin:10px 0 0}
+.examples{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.chip{font-size:14px;font-weight:500;padding:8px 11px;background:#202e45;border:1px solid #354663;border-radius:999px;color:#e3e9ff}
+.result{margin-top:20px;border-radius:18px;padding:19px;background:#111c2c;border:1px solid var(--line);display:none}
+.result.show{display:block}
+.result-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.result h2{font-size:14px;font-weight:600;color:var(--muted);margin:0}
+.answer{font-size:clamp(28px,6vw,42px);font-weight:800;letter-spacing:-.8px;overflow-wrap:anywhere;margin:8px 0 4px}
+.status{color:var(--accent2);font-size:13px}
+.error{color:var(--bad);font-size:15px;margin-top:10px}
+.steps{margin-top:17px;padding-top:15px;border-top:1px solid var(--line)}
+.steps h3{font-size:15px;margin:0 0 8px}
+.steps ol{margin:0;padding-left:22px;color:#dbe4f5}
+.steps li{margin:7px 0;overflow-wrap:anywhere}
+.note{font-size:13px;color:var(--muted);margin:12px 0 0}
+.features{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px}
+.feature{border:1px solid var(--line);border-radius:15px;padding:13px;background:#172235aa}
+.feature strong{display:block;font-size:14px}
+.feature span{display:block;font-size:12px;color:var(--muted);margin-top:3px}
+footer{text-align:center;color:var(--muted);font-size:12px;margin-top:22px}
+@media(max-width:560px){.entry{flex-wrap:wrap}input{flex-basis:100%;font-size:18px}.entry button:not(.clear){flex:1}.features{grid-template-columns:1fr}.feature{display:flex;align-items:center;justify-content:space-between;gap:12px}.feature span{margin:0;text-align:right}.result-top{align-items:flex-start}}
+</style>
+</head>
+<body>
+<main>
+<header><div class="logo">У</div><div><h1>УчиЛегко</h1><p class="sub">Решатель математических примеров</p></div></header>
+<nav class="tabs" aria-label="Разделы">
+<button class="tab active" id="tabSolve" type="button">🧮 Решатель</button>
+<button class="tab" id="tabLearn" type="button">💡 Объяснения</button>
+</nav>
+<section class="card" id="solvePanel">
+<label for="expr">Введи пример</label>
+<div class="entry">
+<input id="expr" type="text" inputmode="text" autocomplete="off" spellcheck="false" placeholder="Например: (12 + 8) × 3 − 5" aria-label="Математический пример">
+<button id="solve">Решить</button><button class="clear" id="clear" title="Очистить" aria-label="Очистить">✕</button>
+</div>
+<p class="hint">Можно использовать + − × ÷, скобки, степени (^), квадратный корень √ и проценты (%).</p>
+<div class="examples">
+<button class="chip" data-expr="(12 + 8) * 3 - 5">(12 + 8) × 3 − 5</button>
+<button class="chip" data-expr="3/4 + 2/5">¾ + ⅖</button>
+<button class="chip" data-expr="2^5 + sqrt(81)">2⁵ + √81</button>
+<button class="chip" data-expr="15% * 800">15% от 800</button>
+<button class="chip" data-expr="7*(4+3)-18">7 × (4 + 3) − 18</button>
+</div>
+<div id="result" class="result" aria-live="polite">
+<div class="result-top"><h2>ОТВЕТ</h2><span class="status" id="status">Готово</span></div>
+<div class="answer" id="answer"></div>
+<div class="steps" id="stepsBox"><h3>Как получилось</h3><ol id="steps"></ol></div>
+<div id="error" class="error"></div>
+<p class="note">Проверяй шаги и старайся понять решение — так легче научиться решать самостоятельно.</p>
+</div>
+<div class="features">
+<div class="feature"><strong>🧮 Обычные примеры</strong><span>Действия и скобки</span></div>
+<div class="feature"><strong>½ Дроби и проценты</strong><span>Вычисления с числами</span></div>
+<div class="feature"><strong>√ Степени и корни</strong><span>Базовые операции</span></div>
+</div>
+</section>
+<section class="card learn-panel" id="learnPanel" hidden>
+<h2 class="learn-title">Разберём примеры вместе</h2>
+<p class="sub">Нажми на тему, чтобы увидеть простое объяснение и пример решения.</p>
+<div class="lesson-list">
+<button class="lesson" data-lesson="order"><span class="lesson-icon">🔢</span><span><strong>Порядок действий</strong><small>Что считать первым?</small></span><span class="chevron">›</span></button>
+<button class="lesson" data-lesson="powers"><span class="lesson-icon">²</span><span><strong>Степени</strong><small>Что означает 3² или 2³?</small></span><span class="chevron">›</span></button>
+<button class="lesson" data-lesson="roots"><span class="lesson-icon">√</span><span><strong>Квадратные корни</strong><small>Как найти √49?</small></span><span class="chevron">›</span></button>
+<button class="lesson" data-lesson="fractions"><span class="lesson-icon">½</span><span><strong>Дроби</strong><small>Как складывать дроби?</small></span><span class="chevron">›</span></button>
+<button class="lesson" data-lesson="percent"><span class="lesson-icon">％</span><span><strong>Проценты</strong><small>Как найти 15% от числа?</small></span><span class="chevron">›</span></button>
+<button class="lesson" data-lesson="negative"><span class="lesson-icon">±</span><span><strong>Отрицательные числа</strong><small>Как работают минус и скобки?</small></span><span class="chevron">›</span></button>
+</div>
+<article class="lesson-detail" id="lessonDetail" hidden aria-live="polite">
+<div class="detail-heading"><span id="detailIcon">📘</span><h3 id="detailTitle"></h3></div>
+<div id="detailBody"></div>
+<button class="secondary-button" id="tryLesson" type="button">Попробовать в решателе →</button>
+</article>
+</section>
+<footer>Работает прямо в браузере телефона · Без регистрации и без отправки примеров на сервер</footer>
+</main>
+<script>
+const input=document.getElementById('expr'), result=document.getElementById('result'), answerEl=document.getElementById('answer'), stepsEl=document.getElementById('steps'), errorEl=document.getElementById('error'), stepsBox=document.getElementById('stepsBox'), statusEl=document.getElementById('status');
+let typingTimer;
+function fmt(n){if(!Number.isFinite(n))throw Error('Результат не является конечным числом.');if(Math.abs(n)<1e-12)n=0;return Number(n.toPrecision(12)).toLocaleString('ru-RU',{maximumFractionDigits:10});}
+function tokenize(s){
+ s=s.replace(/[×х]/gi,'*').replace(/[÷:]/g,'/').replace(/[−–]/g,'-').replace(/,/g,'.').replace(/√\s*\(/g,'sqrt(').replace(/√\s*(\d+(?:\.\d+)?)/g,'sqrt($1)').replace(/(\d+(?:\.\d+)?)%/g,'($1/100)');
+ s=s.replace(/\s+/g,'');
+ if(!s)throw Error('Сначала введи пример.');
+ if(!/^[0-9.+\-*/^()%a-z]*$/i.test(s))throw Error('Есть неподдерживаемый символ. Используй числа и математические знаки.');
+ s=s.replace(/(\d|\))(?=sqrt\()/g,'$1*').replace(/(\d|\))(?=\()/g,'$1*').replace(/(\))(?=\d)/g,'$1*');
+ const raw=s.match(/sqrt|[0-9]+(?:\.[0-9]+)?|[()+\-*/^%]/gi);
+ if(!raw||raw.join('')!==s)throw Error('Не удалось прочитать пример. Проверь знаки и числа.');
+ return raw.map(t=>/^sqrt$/i.test(t)?{type:'fn',value:t.toLowerCase()}:/^\d/.test(t)?{type:'num',value:Number(t)}:{type:'op',value:t});
+}
+function calculate(source){
+ const tokens=tokenize(source);let p=0;const steps=[];
+ function primary(){
+  const t=tokens[p++];
+  if(!t)throw Error('Не хватает числа.');
+  if(t.type==='num')return {v:t.value,txt:fmt(t.value)};
+  if(t.value==='+'||t.value==='-'){const x=primary();return {v:t.value==='-'?-x.v:x.v,txt:(t.value==='-'?'-':'')+x.txt};}
+  if(t.value==='('){const x=expr(0);if(!tokens[p]||tokens[p++].value!==')')throw Error('Проверь закрывающую скобку.');return {v:x.v,txt:'('+x.txt+')'};}
+  if(t.type==='fn'&&t.value==='sqrt'){if(!tokens[p]||tokens[p++].value!=='(')throw Error('Напиши корень как sqrt(число) или √(число).');const x=expr(0);if(!tokens[p]||tokens[p++].value!==')')throw Error('Проверь скобки у корня.');if(x.v<0)throw Error('Нельзя извлечь квадратный корень из отрицательного числа в этом решателе.');const v=Math.sqrt(x.v);steps.push('√'+x.txt+' = '+fmt(v));return {v,txt:'√'+x.txt};}
+  throw Error('Ожидалось число или скобки.');
+ }
+ function expr(min){
+  let left=primary();
+  while(p<tokens.length){
+   const op=tokens[p].value;const prec={'+':1,'-':1,'*':2,'/':2,'%':2,'^':3}[op];
+   if(prec===undefined||prec<min)break;
+   p++;const right=expr(prec+(op==='^'?0:1));let v;
+   if(op==='+')v=left.v+right.v;else if(op==='-')v=left.v-right.v;else if(op==='*')v=left.v*right.v;else if(op==='/'){if(right.v===0)throw Error('На ноль делить нельзя.');v=left.v/right.v;}else if(op==='%')v=left.v%right.v;else v=Math.pow(left.v,right.v);
+   if(!Number.isFinite(v))throw Error('Проверь пример: результат слишком большой или некорректный.');
+   const symbol={'*':'×','/':'÷','^':'^','%':' остаток от деления '}[op]||op;
+   steps.push(left.txt+' '+symbol+' '+right.txt+' = '+fmt(v));
+   left={v,txt:'('+left.txt+' '+symbol+' '+right.txt+')'};
+  }
+  return left;
+ }
+ const out=expr(0);if(p<tokens.length)throw Error('Проверь запись рядом со знаком «'+tokens[p].value+'».');
+ if(!steps.length)steps.push('Это число уже является ответом.');
+ return {value:out.v,steps};
+}
+function solve(){
+ result.classList.add('show');errorEl.textContent='';stepsEl.innerHTML='';stepsBox.style.display='block';statusEl.textContent='Готово';
+ try{const r=calculate(input.value);answerEl.textContent=fmt(r.value);r.steps.forEach(s=>{const li=document.createElement('li');li.textContent=s;stepsEl.appendChild(li)});}
+ catch(e){answerEl.textContent='';stepsBox.style.display='none';errorEl.textContent=e.message||'Не получилось решить пример.';statusEl.textContent='Проверь пример';}
+}
+document.getElementById('solve').addEventListener('click',solve);
+document.getElementById('clear').addEventListener('click',()=>{input.value='';result.classList.remove('show');input.focus()});
+document.querySelectorAll('[data-expr]').forEach(b=>b.addEventListener('click',()=>{input.value=b.dataset.expr;solve()}));
+input.addEventListener('keydown',e=>{if(e.key==='Enter')solve()});
+input.addEventListener('input',()=>{clearTimeout(typingTimer);if(input.value.trim())typingTimer=setTimeout(solve,500);else result.classList.remove('show')});
+const lessonData={
+ order:{icon:'🔢',title:'Порядок действий',body:'<p>Чтобы получить правильный ответ, выполняй действия в нужном порядке:</p><ol><li>Сначала действия в скобках.</li><li>Затем степени и корни.</li><li>Потом умножение и деление слева направо.</li><li>В конце сложение и вычитание слева направо.</li></ol><div class="example-box">(2 + 3) × 4 = 5 × 4 = <strong>20</strong></div>',expr:'(2+3)*4'},
+ powers:{icon:'²',title:'Степени',body:'<p>Степень показывает, сколько раз число умножается само на себя.</p><div class="example-box">3² = 3 × 3 = <strong>9</strong></div><div class="example-box">2³ = 2 × 2 × 2 = <strong>8</strong></div><p>В решателе знак <strong>^</strong> заменяет маленькую цифру сверху: введи <strong>3^2</strong>.</p>',expr:'3^2+2^3'},
+ roots:{icon:'√',title:'Квадратные корни',body:'<p>Квадратный корень из числа — это число, которое при умножении само на себя даёт исходное число.</p><div class="example-box">√49 = <strong>7</strong>, потому что 7 × 7 = 49.</div><ol><li>Вспомни число, умноженное само на себя.</li><li>Проверь результат возведением в квадрат.</li></ol><p>Вводи, например, <strong>√49</strong> или <strong>sqrt(49)</strong>.</p>',expr:'sqrt(49)+2^2'},
+ fractions:{icon:'½',title:'Дроби',body:'<p>При сложении дробей с одинаковыми знаменателями складываем числители, а знаменатель оставляем прежним.</p><div class="example-box">1/5 + 2/5 = 3/5</div><p>Если знаменатели разные, сначала приведи дроби к общему знаменателю.</p><div class="example-box">1/2 + 1/3 = 3/6 + 2/6 = <strong>5/6</strong></div>',expr:'1/2+1/3'},
+ percent:{icon:'％',title:'Проценты',body:'<p>Процент — это одна сотая часть числа. Чтобы найти процент от числа, переведи процент в дробь и умножь.</p><div class="example-box">15% от 800 = 0,15 × 800 = <strong>120</strong></div><p>В решателе можешь ввести <strong>15% * 800</strong>.</p>',expr:'15%*800'},
+ negative:{icon:'±',title:'Отрицательные числа',body:'<p>При сложении чисел с разными знаками вычти меньшее по модулю из большего и оставь знак числа с большим модулем.</p><div class="example-box">−7 + 3 = <strong>−4</strong></div><p>При умножении и делении: одинаковые знаки дают плюс, разные знаки — минус.</p><div class="example-box">−4 × 3 = <strong>−12</strong></div>',expr:'-7+3'}
+};
+const tabSolve=document.getElementById('tabSolve'),tabLearn=document.getElementById('tabLearn'),solvePanel=document.getElementById('solvePanel'),learnPanel=document.getElementById('learnPanel'),lessonDetail=document.getElementById('lessonDetail');
+function setTab(which){const learn=which==='learn';solvePanel.hidden=learn;learnPanel.hidden=!learn;tabSolve.classList.toggle('active',!learn);tabLearn.classList.toggle('active',learn);}
+tabSolve.addEventListener('click',()=>setTab('solve'));tabLearn.addEventListener('click',()=>setTab('learn'));
+document.querySelectorAll('[data-lesson]').forEach(btn=>btn.addEventListener('click',()=>{const d=lessonData[btn.dataset.lesson];document.getElementById('detailIcon').textContent=d.icon;document.getElementById('detailTitle').textContent=d.title;document.getElementById('detailBody').innerHTML=d.body;document.getElementById('tryLesson').dataset.expr=d.expr;lessonDetail.hidden=false;}));
+document.getElementById('tryLesson').addEventListener('click',e=>{input.value=e.currentTarget.dataset.expr;setTab('solve');solve();input.focus();});
+</script>
+</body>
+</html>
